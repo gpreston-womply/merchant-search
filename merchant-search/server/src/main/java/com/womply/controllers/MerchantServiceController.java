@@ -11,7 +11,6 @@ import com.google.inject.Singleton;
 import io.vertx.ext.web.RoutingContext;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -69,5 +68,6 @@ public class MerchantServiceController extends BaseController {
             Merchant merchant = new Merchant();
             merchant.setLocation("fdsf");
         }
+        return null;
     }
 }
