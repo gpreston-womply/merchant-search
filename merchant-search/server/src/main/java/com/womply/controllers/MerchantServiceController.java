@@ -46,12 +46,15 @@ public class MerchantServiceController extends BaseController {
         SolrClient solr = new HttpSolrClient(urlString);
 
         SolrQuery solrQuery = new SolrQuery();
+            log.info("SOLR QUERY: '" + query.getAsSolrQuery()+"'");
             solrQuery.setQuery(query.getAsSolrQuery());
 
         try {
             ObjectMapper mapper = new ObjectMapper();
             QueryResponse solrResponse = solr.query(solrQuery);
-            List<Merchant> merchants = solrResponseToPojos(solrResponse);
+//            List<Merchant> merchants = solrResponseToPojos(solrResponse);
+            routingContext.response().putHeader("Access-Control-Allow-Credentials","true");
+            routingContext.response().putHeader("Access-Control-Allow-Origin","http://local.womply.com:9999");
             routingContext.response().end(mapper.writeValueAsString(solrResponse.getResults()));
         } catch (SolrServerException e) {
             routingContext.fail(e);
@@ -66,7 +69,8 @@ public class MerchantServiceController extends BaseController {
         }
         for (SolrDocument document : response.getResults()) {
             Merchant merchant = new Merchant();
-            merchant.setLocation("fdsf");
+            merchant.setCity(document.getFieldValue("city").toString());
+            merchant.setPartnerName(document.getFieldValue("partner_name").toString());
         }
         return null;
     }

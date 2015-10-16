@@ -20,6 +20,7 @@ public class MerchantSearchQuery {
     String body;
     String location;
 
+
     /**
      *
      */
@@ -57,9 +58,6 @@ public class MerchantSearchQuery {
             inputRemainder = inputRemainder.substring(0, openQuote) + " " + inputRemainder
                     .substring(closedQuote + 1);
             openQuote = inputRemainder.indexOf("\"");
-//            System.out.println(phrases);
-//            System.out.println(inputRemainder);
-//            System.out.println("======================");
         }
 
         // extract all non-quoted phrases (delimited by ' ')
@@ -78,6 +76,7 @@ public class MerchantSearchQuery {
         // build the query string
         String phrasesString = "";
         for (String phrase : phrases) {
+            phrase+="*";
             phrasesString += phrase + " AND ";
         }
         phrasesString = phrasesString.substring(0, phrasesString.length() - " AND ".length()).trim();

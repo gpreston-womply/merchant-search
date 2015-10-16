@@ -30,7 +30,6 @@ public class Merchant {
     String merchantType;
     String merchantLocationName;
     String phoneNumber;
-    String location;
     Boolean isClaimed;
     Boolean isFake;
     String websiteUrl;
@@ -48,6 +47,11 @@ public class Merchant {
     Double revenueLastMonth;
     String category;
     Integer userCount;
+    String city;
+    String State;
+    String address1;
+    String address2;
+    String zip;
 
     /**
      * testing
@@ -72,7 +76,6 @@ public class Merchant {
         merchant.setMerchantType(RandomStringUtils.randomAlphabetic(1));
         merchant.setMerchantLocationName(RandomStringUtils.randomAlphabetic(1));
         merchant.setPhoneNumber(RandomStringUtils.randomNumeric(10));
-        merchant.setLocation(RandomStringUtils.randomAlphabetic(1));
         merchant.setIsFake(Math.random() < 0.5);
         merchant.setIsClaimed(Math.random() < 0.5);
         merchant.setLegalName(RandomStringUtils.randomAlphabetic(1));
