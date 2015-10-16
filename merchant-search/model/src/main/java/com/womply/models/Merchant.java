@@ -47,7 +47,11 @@ public class Merchant {
     Double revenueThisMonth;
     Double revenueLastMonth;
     String category;
+    Integer userCount;
 
+    /**
+     * testing
+     */
     public static void main(String[] args) throws Exception {
         List<Merchant> merchants = Lists.newArrayList();
         for (int i = 0; i < 100; i++) {
@@ -55,10 +59,13 @@ public class Merchant {
             merchants.add(randomizedMerchant());
         }
         ObjectMapper om  = new ObjectMapper();
-       String merchantsJson =  om.writeValueAsString(merchants);
+        String merchantsJson =  om.writeValueAsString(merchants);
         System.out.println(merchantsJson);
     }
 
+    /**
+     * create a {@link Merchant} with randomized values for testing
+     */
     private static Merchant randomizedMerchant() {
         Merchant merchant = new Merchant();
         merchant.setMerchantLocationId(System.currentTimeMillis());
@@ -84,10 +91,10 @@ public class Merchant {
 
         merchant.setRevenueThisMonth(250 + (10000000 - 250) * new Random().nextDouble());
         merchant.setRevenueThisMonth(0.01 * Math.floor(merchant.getRevenueThisMonth() * 100.0));
-
+        merchant.setUserCount(new Random().nextInt((100 - 1) + 1) + 1);
         merchant.setCategory(RandomStringUtils.randomAlphabetic(1));
 
-return merchant;
+        return merchant;
     }
 }
 

@@ -69,6 +69,11 @@
             <version>2.6.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+            <version>5.3.1</version>
+        </dependency>
 
     </dependencies>
 
@@ -95,52 +100,52 @@
                 <artifactId>exec-maven-plugin</artifactId>
             </plugin>
 
-            <plugin>
-                <groupId>org.jolokia</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <configuration>
-                    <images>
-                        <!-- Artifact -->
-                        <image>
-                            <!--This needs to actually exist in quay-->
-                            <name>quay.io/womply/merchant-search:${git.branch}</name>
-                            <alias>merchant-search</alias>
-                            <run>
-                                <ports>
-                                    <port>${service.port}:${service.port}</port>
-                                </ports>
-                            </run>
-                            <build>
-                                <from>quay.io/womply/java-8:latest</from>
-                                <maintainer>pdxdata@womply.com</maintainer>
-                                <tags>
-                                    <tag>${git.branch}</tag>
-                                </tags>
-                                <ports>
-                                    <port>${service.port}</port>
-                                </ports>
-                                <entryPoint>java -jar /app/${project.build.finalName}-shaded.jar</entryPoint>
-                                <assembly>
-                                    <mode>dir</mode>
-                                    <basedir>/app</basedir>
-                                    <inline>
-                                        <files>
-                                            <file>
-                                                <source>${project.build.directory}/${project.build.finalName}-shaded.jar</source>
-                                                <outputDirectory>.</outputDirectory>
-                                            </file>
-                                            <file>
-                                                <source>${project.build.directory}/bcprov-jdk15on.jar</source>
-                                                <outputDirectory>.</outputDirectory>
-                                            </file>
-                                        </files>
-                                    </inline>
-                                </assembly>
-                            </build>
-                        </image>
-                    </images>
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.jolokia</groupId>-->
+                <!--<artifactId>docker-maven-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<images>-->
+                        <!--&lt;!&ndash; Artifact &ndash;&gt;-->
+                        <!--<image>-->
+                            <!--&lt;!&ndash;This needs to actually exist in quay&ndash;&gt;-->
+                            <!--<name>quay.io/womply/merchant-search:${git.branch}</name>-->
+                            <!--<alias>merchant-search</alias>-->
+                            <!--<run>-->
+                                <!--<ports>-->
+                                    <!--<port>${service.port}:${service.port}</port>-->
+                                <!--</ports>-->
+                            <!--</run>-->
+                            <!--<build>-->
+                                <!--<from>quay.io/womply/java-8:latest</from>-->
+                                <!--<maintainer>pdxdata@womply.com</maintainer>-->
+                                <!--<tags>-->
+                                    <!--<tag>${git.branch}</tag>-->
+                                <!--</tags>-->
+                                <!--<ports>-->
+                                    <!--<port>${service.port}</port>-->
+                                <!--</ports>-->
+                                <!--<entryPoint>java -jar /app/${project.build.finalName}-shaded.jar</entryPoint>-->
+                                <!--<assembly>-->
+                                    <!--<mode>dir</mode>-->
+                                    <!--<basedir>/app</basedir>-->
+                                    <!--<inline>-->
+                                        <!--<files>-->
+                                            <!--<file>-->
+                                                <!--<source>${project.build.directory}/${project.build.finalName}-shaded.jar</source>-->
+                                                <!--<outputDirectory>.</outputDirectory>-->
+                                            <!--</file>-->
+                                            <!--<file>-->
+                                                <!--<source>${project.build.directory}/bcprov-jdk15on.jar</source>-->
+                                                <!--<outputDirectory>.</outputDirectory>-->
+                                            <!--</file>-->
+                                        <!--</files>-->
+                                    <!--</inline>-->
+                                <!--</assembly>-->
+                            <!--</build>-->
+                        <!--</image>-->
+                    <!--</images>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
 
         </plugins>
     </build>
