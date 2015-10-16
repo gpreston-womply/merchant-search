@@ -26,9 +26,9 @@ public class MerchantServiceRouter implements RouteRegistry {
 
     @Override
     public Set<RouteDefinition> getRouteDescriptors() {
-        LOGGER.info("Registering route: /v1/merchant-searchs/:id");
-        RouteDefinition healthCheckRoute =
-            RouteDefinition.get("/v1/merchant-searchs/:id", serviceController::getMerchantById);
-        return Sets.newHashSet(healthCheckRoute);
+        LOGGER.info("Registering route: /v1/merchant-search/");
+        RouteDefinition merchantSearchRoute =
+            RouteDefinition.get("/v1/merchant-search/", serviceController::getMerchants);
+        return Sets.newHashSet(merchantSearchRoute);
     }
 }

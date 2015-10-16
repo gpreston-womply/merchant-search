@@ -1,10 +1,7 @@
 package com.womply.controllers;
 
-import com.womply.common.controllers.BaseController;
-import com.womply.db.MerchantDAO;
-
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.womply.common.controllers.BaseController;
 import io.vertx.ext.web.RoutingContext;
 
 /**
@@ -13,13 +10,10 @@ import io.vertx.ext.web.RoutingContext;
 @Singleton
 public class MerchantServiceController extends BaseController {
 
-    @Inject
-    private MerchantDAO serviceDAO;
-
     /**
      * Gets a Merchant object for a given id
      */
-    public void getMerchantById(RoutingContext routingContext) {
-        resolveById(routingContext, serviceDAO::getById);
+    public void getMerchants(RoutingContext routingContext) {
+
     }
 }
