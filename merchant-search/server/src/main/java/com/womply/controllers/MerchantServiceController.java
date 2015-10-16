@@ -1,7 +1,8 @@
 package com.womply.controllers;
 
-import com.google.inject.Singleton;
 import com.womply.common.controllers.BaseController;
+
+import com.google.inject.Singleton;
 import io.vertx.ext.web.RoutingContext;
 
 /**
