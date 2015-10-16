@@ -2,7 +2,6 @@ package com.womply.server;
 
 import com.womply.common.health.HealthCheckable;
 import com.womply.common.routing.RouteRegistry;
-import com.womply.db.MerchantDAOImpl;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
@@ -21,12 +20,6 @@ public class MerchantServiceModule extends AbstractModule {
 
         // bind the HealthCheckable components
         Multibinder<HealthCheckable> healthCheckComponents = Multibinder.newSetBinder(binder(), HealthCheckable.class);
-        healthCheckComponents.addBinding().to(MerchantDAOImpl.class);
-
-        // bind DAO interfaces to implementations
-//        // bind in a default ISummarizable, replace this with your own ISummarizable
-//        // instance to enable the dashboard
-//        bind(ISummarizable.class).toInstance(new NoSummarySummarizable());
     }
 
 }

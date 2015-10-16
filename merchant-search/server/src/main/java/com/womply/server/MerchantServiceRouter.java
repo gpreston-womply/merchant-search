@@ -28,7 +28,10 @@ public class MerchantServiceRouter implements RouteRegistry {
     public Set<RouteDefinition> getRouteDescriptors() {
         LOGGER.info("Registering route: /v1/merchant-search/");
         RouteDefinition merchantSearchRoute =
-            RouteDefinition.get("/v1/merchant-search/", serviceController::getMerchants);
-        return Sets.newHashSet(merchantSearchRoute);
+                RouteDefinition.get("/v1/merchant-search/", serviceController::getMerchants);
+        RouteDefinition wordCloudRoute =
+                RouteDefinition.get("/v1/word-cloud/:merchantLocationId", serviceController::getWordCloud);
+
+        return Sets.newHashSet(merchantSearchRoute, wordCloudRoute);
     }
 }

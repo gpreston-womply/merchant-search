@@ -1,6 +1,7 @@
 package com.womply.models;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrClient;
@@ -11,6 +12,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * POJO representing a merchant search query from the frontend
@@ -20,20 +22,43 @@ public class MerchantSearchQuery {
     String body;
     String location;
 
+    Map<String, String> filters = Maps.newHashMap();
 
     /**
      *
      */
-    public String getAsSolrQuery() {
-        String solrQuery = "";
+    public SolrQuery getAsSolrQuery() {
+        // main query
+        SolrQuery solrQuery = new SolrQuery();
+        String queryString = "";
         if (body != null && !body.trim().isEmpty()) {
-            solrQuery += "body:(" + toSolrParamString(body) + ")";
+            queryString += "+body:(" + toSolrParamString(body) + ")";
         }
 
         if (location != null && !location.trim().isEmpty()) {
-            solrQuery += " location:(" + toSolrParamString(location) + ")";
+            queryString += " +location:(" + toSolrParamString(location) + ")";
         }
+
+        solrQuery.setQuery(queryString);
+
+        // filters
+        for (String facet : filters.keySet()) {
+            String value = filters.get(facet);
+            if (value != null && !value.toLowerCase().trim().equals("null") && !value.trim().isEmpty()) {
+                solrQuery.addFilterQuery("+" + facet + ":" + value);
+            }
+        }
+        solrQuery.addFacetField("is_claimed");
+        solrQuery.addFacetField("category");
+        solrQuery.addFacetField("product");
+        solrQuery.addFacetField("yelp_is_claimed");
+        solrQuery.addFacetField("processor_name");
+        solrQuery.setParam("facet.limit", "5");
         return solrQuery;
+    }
+
+    public void addFacet(String field, String value) {
+        filters.put(field, value);
     }
 
     /**
@@ -76,7 +101,7 @@ public class MerchantSearchQuery {
         // build the query string
         String phrasesString = "";
         for (String phrase : phrases) {
-            phrase+="*";
+            phrase += "*";
             phrasesString += phrase + " AND ";
         }
         phrasesString = phrasesString.substring(0, phrasesString.length() - " AND ".length()).trim();
@@ -94,8 +119,7 @@ public class MerchantSearchQuery {
         String urlString = "http://10.0.1.39:8983/solr/merchant_locations/";
         SolrClient solr = new HttpSolrClient(urlString);
 
-        SolrQuery solrQuery = new SolrQuery();
-        solrQuery.setQuery(query.getAsSolrQuery());
+        SolrQuery solrQuery = query.getAsSolrQuery();
         QueryResponse response = solr.query(solrQuery);
         System.out.println(response);
 
