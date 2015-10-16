@@ -67,7 +67,7 @@ public class MerchantServiceController extends BaseController {
         }
         for (SolrDocument document : response.getResults()) {
             Merchant merchant = new Merchant();
-            merchant.setLocation(document);
+            merchant.setLocation("fdsf");
         }
     }
 }
