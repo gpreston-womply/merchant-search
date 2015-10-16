@@ -1,6 +1,12 @@
 package com.womply.models;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import lombok.Data;
+import org.apache.commons.lang3.RandomStringUtils;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * A Merchant
@@ -41,4 +47,47 @@ public class Merchant {
     Double revenueThisMonth;
     Double revenueLastMonth;
     String category;
+
+    public static void main(String[] args) throws Exception {
+        List<Merchant> merchants = Lists.newArrayList();
+        for (int i = 0; i < 100; i++) {
+            merchants.add(randomizedMerchant());
+        }
+        ObjectMapper om  = new ObjectMapper();
+       String merchantsJson =  om.writeValueAsString(merchants);
+        System.out.println(merchantsJson);
+    }
+
+    private static Merchant randomizedMerchant() {
+        Merchant merchant = new Merchant();
+        merchant.setMerchantLocationId(System.currentTimeMillis());
+        merchant.setMerchantType(RandomStringUtils.randomAlphabetic(1));
+        merchant.setMerchantLocationName(RandomStringUtils.randomAlphabetic(1));
+        merchant.setPhoneNumber(RandomStringUtils.randomNumeric(10));
+        merchant.setLocation(RandomStringUtils.randomAlphabetic(1));
+        merchant.setIsFake(Math.random() < 0.5);
+        merchant.setIsClaimed(Math.random() < 0.5);
+        merchant.setLegalName(RandomStringUtils.randomAlphabetic(1));
+        merchant.setWebsiteUrl(RandomStringUtils.randomAlphabetic(1));
+        merchant.setSignerEmail(RandomStringUtils.randomAlphabetic(1));
+        merchant.setSignerFullName(RandomStringUtils.randomAlphabetic(1));
+        merchant.setMerchantLocationSlug(RandomStringUtils.randomAlphabetic(1));
+        merchant.setMerchantName(RandomStringUtils.randomAlphabetic(1));
+        merchant.setMid(System.currentTimeMillis());
+        merchant.setProcessorName(RandomStringUtils.randomAlphabetic(1));
+        merchant.setCompanyName(RandomStringUtils.randomAlphabetic(1));
+        merchant.setPartnerId(System.currentTimeMillis());
+        merchant.setPartnerName(RandomStringUtils.randomAlphabetic(1));
+        merchant.setRevenueLastMonth(250 + (10000000 - 250) * new Random().nextDouble());
+        merchant.setRevenueLastMonth(0.01 * Math.floor(merchant.getRevenueLastMonth() * 100.0));
+
+        merchant.setRevenueThisMonth(250 + (10000000 - 250) * new Random().nextDouble());
+        merchant.setRevenueThisMonth(0.01 * Math.floor(merchant.getRevenueThisMonth() * 100.0));
+
+        merchant.setCategory(RandomStringUtils.randomAlphabetic(1));
+
+return merchant;
+    }
 }
+
+
