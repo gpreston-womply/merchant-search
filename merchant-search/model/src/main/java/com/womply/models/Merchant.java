@@ -51,6 +51,7 @@ public class Merchant {
     public static void main(String[] args) throws Exception {
         List<Merchant> merchants = Lists.newArrayList();
         for (int i = 0; i < 100; i++) {
+            Thread.sleep(2);
             merchants.add(randomizedMerchant());
         }
         ObjectMapper om  = new ObjectMapper();
