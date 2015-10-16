@@ -1,8 +1,18 @@
 var gulp        = require('gulp'),
     directories = require('./directories.js');
 
+gulp.task('library:jq', function() {
+  return gulp.src('./node_modules/jquery/dist/jquery.min.js')
+    .pipe(gulp.dest(directories.lib));
+});
+
 gulp.task('library:angular', function() {
   return gulp.src('./node_modules/angular/angular.min.js')
+    .pipe(gulp.dest(directories.lib));
+});
+
+gulp.task('library:angular-cloud', function() {
+  return gulp.src('./angular-jqcloud/angular-jqcloud.js')
     .pipe(gulp.dest(directories.lib));
 });
 

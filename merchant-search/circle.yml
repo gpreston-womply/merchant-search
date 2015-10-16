@@ -1,0 +1,60 @@
+general:
+  artifacts:
+    - "*/target/surefire-reports"
+    - "*/target/coverage-reports"
+machine:
+  services:
+    - docker
+  java:
+    version: oraclejdk8
+  environment:
+    REPO_ROOT: quay.io/womply
+dependencies:
+  cache_directories:
+    - ~/docker_cache
+  pre:
+      # get unlimited JCE for encryption
+    - curl -b oraclelicense=accept-securebackup-cookie -L https://edelivery.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o jce_policy-8.zip
+    - unzip jce_policy-8.zip
+    - sudo cp UnlimitedJCEPolicyJDK8/* /usr/lib/jvm/jdk1.8.0/jre/lib/security/
+      # login to docker
+    - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS quay.io
+    - if [ -e ~/docker_cache/java-8.tar ]; then docker load -i ~/docker_cache/java-8.tar; fi
+      # set maven settings.xml with artifactory authentication from environment variable
+    - echo $MVN_SETTINGS_XML > ~/.m2/settings.xml
+    - >
+      CURRENT_VERSION=$(mvn -q  -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive exec:exec|sed 's/-.*//') &&
+      if [ "${CIRCLE_BRANCH}" = "master" ]; then
+        # create a release version by taking the leading version number and appending the build number
+        NEW_VERSION=${CURRENT_VERSION}.${CIRCLE_BUILD_NUM}
+      else
+        # update maven version to be 1.0-<branchname>-SNAPSHOT
+        NEW_VERSION=${CURRENT_VERSION}-${CIRCLE_BRANCH}-SNAPSHOT
+      fi && mvn --batch-mode versions:set -DgenerateBackupPoms=false -DnewVersion=${NEW_VERSION}
+  override:
+    - mvn deploy -Ddocker.keepContainer=true
+  post:
+    - mkdir -p ~/docker_cache
+    - docker save ${REPO_ROOT}/java-8 > ~/docker_cache/java-8.tar
+test:
+  override:
+    - echo 1 # run non-maven tests here
+deployment:
+  ecs:
+    branch: [master, develop]
+    commands:
+      - >
+        TIMESTAMP=$(date +"%Y%m%d-%H%M%S") &&
+        SPECIFIC_BRANCH=${TIMESTAMP}-${CIRCLE_BRANCH}-${CIRCLE_SHA1:0:7} &&
+        curl -L https://github.com/womply/ecsman/blob/master/bin/ecsman.linux?raw=true > ./ecsman &&
+        chmod +x ./ecsman &&
+        while IFS=: read REPO ECS_SERVICE; do
+          # retag with ${TIMESTAMP}-${CIRCLE_BRANCH}-${CIRCLE_SHA1}, then deploy based on that tag
+          docker tag ${REPO_ROOT}/${REPO}:${CIRCLE_BRANCH} ${REPO_ROOT}/${REPO}:${SPECIFIC_BRANCH} &&
+          docker push ${REPO_ROOT}/${REPO}:${SPECIFIC_BRANCH} &&
+          if [ "${CIRCLE_BRANCH}" = "master" ]; then
+            ./ecsman -cred env update $ECS_PROD_CLUSTER $ECS_SERVICE :${SPECIFIC_BRANCH}
+          else
+            ./ecsman -cred env update $ECS_PREPROD_CLUSTER $ECS_SERVICE :${SPECIFIC_BRANCH}
+          fi
+        done < docker_services.yml

@@ -23,6 +23,8 @@ gulp.task('asset', ['gc', 'sg']);
  * Copy all third party libraries
  */
 gulp.task('libraries', ['library:angular',
+                        'library:angular-cloud',
+                        'library:jq',
                         'library:angular-route',
                         'library:angular-aria',
                         'library:angular-animate',

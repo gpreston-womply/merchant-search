@@ -62,7 +62,7 @@ angular.module('womply')
               path = override.API[apiName].host || $location. protocol() + '://' + $location.host() + ($location.port() ? ':' + $location.port() : '');
             }
 
-            return path + (override.API[apiName].path || '/api/0.1');
+            return path + (override.API[apiName].path || '');
           }
         };
 

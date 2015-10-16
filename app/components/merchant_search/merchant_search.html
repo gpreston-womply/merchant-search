@@ -5,15 +5,140 @@
     </div>
   </md-toolbar>
   <md-card-content>
-    <div layout="row">
+    <div layout="row" flex="100">
       <md-input-container flex="45">
-        <label>Merchant Name</label>
-        <input>
+        <label>Merchant Data</label>
+        <input
+          ng-model="search.queryModel.body"
+          ng-model-options="{debounce: 1000, getterSetter:true}"
+          ng-change="search.updateResults()">
       </md-input-container>
       <md-input-container flex="45">
         <label>Location Data (address, state zip)</label>
-        <input>
+        <input
+          ng-model="search.queryModel.location"
+          ng-model-options="{debounce: 1000, getterSetter:true}"
+          ng-change="search.updateResults()">
       </md-input-container>
     </div>
+    <div>
+      <md-divider></md-divider>
+      <md-button ng-click="search.clear()">Clear</md-button>
+    </div>
+    <div class="facets" layout="row" flex>
+      <md-menu>
+        <md-button ng-click="search.openMenu($mdOpenMenu, $event)">Claimed</md-button>
+        <md-menu-content width="6" class="tall">
+          <md-menu-item layout="column">
+            <div ng-repeat="f in search.queryFacets.is_claimed">
+              <md-button ng-click="search.addFacet('is_claimed', f.name)">{{f.name}} {{f.value}}</md-button>
+            </div>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+      <md-menu>
+        <md-button ng-click="search.openMenu($mdOpenMenu, $event)">Category</md-button>
+        <md-menu-content width="6" class="tall">
+          <md-menu-item layout="column">
+            <div ng-repeat="f in search.queryFacets.category">
+              <md-button ng-click="search.addFacet('category', f.name)">{{f.name}} {{f.value}}</md-button>
+            </div>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+      <md-menu>
+        <md-button ng-click="search.openMenu($mdOpenMenu, $event)">Product</md-button>
+        <md-menu-content width="6" class="tall">
+          <md-menu-item layout="column">
+            <div ng-repeat="f in search.queryFacets.product">
+              <md-button ng-click="search.addFacet('product', f.name)">{{f.name}} {{f.value}}</md-button>
+            </div>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+      <md-menu>
+        <md-button ng-click="search.openMenu($mdOpenMenu, $event)">Yelp Page</md-button>
+        <md-menu-content width="6" class="tall">
+          <md-menu-item layout="column">
+            <div ng-repeat="f in search.queryFacets.yelp_is_claimed">
+              <md-button ng-click="search.addFacet('yelp_is_claimed', f.name)">{{f.name}} {{f.value}}</md-button>
+            </div>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+      <md-menu>
+        <md-button ng-click="search.openMenu($mdOpenMenu, $event)">Partner</md-button>
+        <md-menu-content width="6" class="tall">
+          <md-menu-item layout="column">
+            <div ng-repeat="f in search.queryFacets.partner">
+              <md-button ng-click="search.addFacet('partner', f.name)">{{f.name}} {{f.value}}</md-button>
+            </div>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+    </div>
+    <div class="headers" layout="row" layout-align="space-around center" flex>
+      <div flex="20">
+        Merchant Name
+      </div>
+      <div flex="10">
+        <span>Merchant Location ID</span>
+      </div>
+      <div flex="20">
+        <span>Location</span>
+      </div>
+      <div flex="20">
+        <span>Phone Number</span>
+      </div>
+      <div flex="10">
+        <span>Claimed</span>
+      </div>
+      <div flex="10">
+        <span>Word Cloud</span>
+      </div>
+      <div flex="10">
+        <span>Revenue Last Month</span>
+      </div>
+      <div flex="5">
+      </div>
+    </div>
+      <md-virtual-repeat-container class="repeat-height">
+        <div md-virtual-repeat="r in search.queryResults" layout="row" layout-align="space-around center" flex>
+          <div class="field" flex="20">
+            <span>{{r.merchant_name}}</span>
+          </div>
+          <div class="field" flex="10">
+            <span>{{r.merchant_id}}</span>
+          </div>
+          <div class="field" flex="20">
+            <div>
+              <span>{{r.address1}}</span>
+            </div>
+            <div>
+              <span>{{r.address2}}</span>
+            </div>
+            <div>
+              <span>{{r.city}} {{r.state}}, {{r.zip}}<span>
+            </div>
+          </div>
+          <div class="field" flex="20">
+            <span>{{r.phone}}</span>
+          </div>
+          <div class="field" flex="10">
+            <md-checkbox ng-disabled="true" ng-model="r.is_claimed" aria-label="claimed">
+            <span>{{r.isClaimed}}</span>
+          </div>
+          <div class="field" flex="10">
+            <md-button
+              ng-disabled="!r.yelp_is_claimed"
+              ng-click="search.showCloud(r.merchant_location_id)">
+              Cloud
+            </md-button>
+          </div>
+          <div class="field" flex="10">
+            {{r.revenue_this_month}}
+          </div>
+        </div>
+      </md-virtual-repeat-container>
   </md-card-content>
 </md-card>

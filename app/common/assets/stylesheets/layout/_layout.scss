@@ -17,3 +17,34 @@ body {
     }
   }
 }
+
+.repeat-height {
+  height: 400px;
+}
+
+.headers {
+  margin-bottom: 5px;
+  text-align: right;
+  padding-right: 15px;
+}
+
+.field {
+  display:inline;
+  text-align: right;
+  padding-right: 15px;
+  border: 1px solid #f8f8f8;
+  height: 60px;
+  font-size: 13px;
+}
+
+.facets {
+  margin-bottom: 15px;
+}
+
+.controls {
+  display: block;
+}
+
+.tall {
+  height:250px;
+}
