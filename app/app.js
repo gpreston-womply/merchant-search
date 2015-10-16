@@ -41,30 +41,30 @@ angular.module('womply')
         self.locationChanged = config.LocationChanged;
       });
 
-    Context.initialized(function(data) {
-      self.slug = Context.getCurrentMerchantSlug();
-      var location = _.find(data.merchant_locations, function(loc) {
-        return loc.slug == self.slug || loc.id == self.slug;
-      });
-
-      if(location && _.isString(location.partner_slug)) {
-        $document[0].body.id = location.partner_slug.toLowerCase();
-        $document[0].title = location.partner_name + " " + location.product_name + " - " + location.name;
-      }
-
-      Context.getCurrentMerchantLocation()
-        .then(function(location) {
-          var location_info = location.name + " - " + location.address1 + ", " + location.city + ", " + location.state;
-          var visit_type = location.is_first_visit ? 'New visit' : 'Return visit';
-
-          MixPanelService.initialize(data.mixpanel_token, {
-            'Merchant name': location_info,
-            'Brand': location.partner_name,
-            'Visit type': visit_type
-          });
-        });
-
-    });
-
-    Context.initialize();
+    // Context.initialized(function(data) {
+    //   self.slug = Context.getCurrentMerchantSlug();
+    //   var location = _.find(data.merchant_locations, function(loc) {
+    //     return loc.slug == self.slug || loc.id == self.slug;
+    //   });
+    //
+    //   if(location && _.isString(location.partner_slug)) {
+    //     $document[0].body.id = location.partner_slug.toLowerCase();
+    //     $document[0].title = location.partner_name + " " + location.product_name + " - " + location.name;
+    //   }
+    //
+    //   Context.getCurrentMerchantLocation()
+    //     .then(function(location) {
+    //       var location_info = location.name + " - " + location.address1 + ", " + location.city + ", " + location.state;
+    //       var visit_type = location.is_first_visit ? 'New visit' : 'Return visit';
+    //
+    //       MixPanelService.initialize(data.mixpanel_token, {
+    //         'Merchant name': location_info,
+    //         'Brand': location.partner_name,
+    //         'Visit type': visit_type
+    //       });
+    //     });
+    //
+    // });
+    //
+    // Context.initialize();
   }]);

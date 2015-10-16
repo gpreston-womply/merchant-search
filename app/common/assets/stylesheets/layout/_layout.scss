@@ -12,13 +12,8 @@ body {
 
     .view-layout {
       background: $view-layout-background;
-      position: $view-layout-position;
-      top: $view-layout-top;
-      left: $view-layout-left;
-      bottom: $view-layout-bottom;
-      right: $view-layout-right;
-      overflow: $view-layout-overflow;
-      padding: $view-layout-padding;
+      padding: 10px;
+      height: 100%;
     }
   }
 }

@@ -15,16 +15,11 @@ angular.module('womply')
       ApiPath: '/api/0.1',
       NavigationLinks: [
         {
-          id:     'nav1',
-          text:   'Nav 1',
-          route:  'nav1',
+          id:     'merchant_search',
+          text:   'Search',
+          route:  'merchant_search',
           active: true
         },
-        {
-          id:     'nav2',
-          text:   'Nav 2',
-          route:  'nav2'
-        }
       ],
       NavigationSelected: function() {
         var self = this;
