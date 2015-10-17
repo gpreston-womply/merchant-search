@@ -73,7 +73,8 @@ public class MerchantServiceController extends BaseController {
                 MerchantSearchFacet facet = new MerchantSearchFacet();
                 facet.setName(facetField.getName());
                 for (FacetField.Count count : facetField.getValues()) {
-                    facetMap.put(count.getName(), String.valueOf(count.getCount()));
+                    if (!count.getName().trim().isEmpty() && facetMap.size() < 5)
+                        facetMap.put(count.getName(), String.valueOf(count.getCount()));
                 }
                 facet.setValues(facetMap);
                 facets.add(facet);
@@ -106,6 +107,8 @@ public class MerchantServiceController extends BaseController {
             for (FacetField.Count count : facetField.getValues()) {
                 wordCloud.put(count.getName(), count.getCount());
             }
+            routingContext.response().putHeader("Access-Control-Allow-Credentials", "true");
+            routingContext.response().putHeader("Access-Control-Allow-Origin", "http://local.womply.com:9999");
             ObjectMapper mapper = new ObjectMapper();
             routingContext.response().end(mapper.writeValueAsString(wordCloud));
         } catch (SolrServerException e) {

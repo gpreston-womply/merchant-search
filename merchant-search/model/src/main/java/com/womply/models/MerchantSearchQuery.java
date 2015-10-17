@@ -45,15 +45,16 @@ public class MerchantSearchQuery {
         for (String facet : filters.keySet()) {
             String value = filters.get(facet);
             if (value != null && !value.toLowerCase().trim().equals("null") && !value.trim().isEmpty()) {
-                solrQuery.addFilterQuery("+" + facet + ":" + value);
+                solrQuery.addFilterQuery("+" + facet + ":\"" + value+"\"");
             }
         }
         solrQuery.addFacetField("is_claimed");
         solrQuery.addFacetField("category");
         solrQuery.addFacetField("product");
         solrQuery.addFacetField("yelp_is_claimed");
-        solrQuery.addFacetField("processor_name");
-        solrQuery.setParam("facet.limit", "5");
+        solrQuery.addFacetField("partner_name");
+        solrQuery.setParam("facet.limit", "6");
+        solrQuery.setRows(500);
         return solrQuery;
     }
 
