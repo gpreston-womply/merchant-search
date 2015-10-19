@@ -1,0 +1,53 @@
+<dataConfig>
+    <dataSource type="JdbcDataSource" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://host:3306/womply" user="user" password="pass" readOnly="true" batchSize="-1"/>
+    <document>
+        <entity name="merchant_location" query="select 
+  ccpm.processor_merchant_id as id,
+  ml.id as merchant_location_id,
+  ml.merchant_id,
+  ml.name as merchant_location_name,
+  ml.phone,
+  ml.address1,
+  ml.address2,
+  ml.city,
+  ml.state,
+  ml.zip,
+  ml.is_claimed,
+  ml.is_fake,
+  ml.website_url,
+  ml.legal_name,
+  ml.signer_full_name,
+  ml.signer_email,
+  ml.slug as merchant_location_slug,
+  m.name as merchant_name,
+  m.slug as merchant_slug,
+  ccpm.processor_merchant_id as mid,
+  ccpm.processor_name,
+  ccpm.company_name,
+  ccpm.mid_provider_id as partner_id,
+  ims.revenue_this_month,
+  ims.revenue_last_month,
+  wc.name as category,
+  p.name as partner_name,
+  roles.user_count,
+  if(prod.type = 'InsightsPlusProduct', 'Insights Essentials', 'Insights Lite') as product,
+  ccpm.created_at,
+  yelp.claimed as yelp_is_claimed
+from
+  credit_card_processor_merchants ccpm
+left outer join merchant_locations ml on (ccpm.merchant_location_id = ml.id)
+left outer join merchants m on (ml.merchant_id = m.id)
+left outer join partners p on (p.id = ccpm.mid_provider_id)
+left outer join (select max(id) as id, merchant_location_id from insights_monthly_summaries group by merchant_location_id) ims_max on (ims_max.merchant_location_id = ccpm.merchant_location_id)
+left outer join insights_monthly_summaries ims on (ccpm.merchant_location_id = ims.merchant_location_id AND ims.id = ims_max.id)
+left outer join merchant_location_categories mlc on (ccpm.merchant_location_id = mlc.merchant_location_id AND mlc.authoritative = 1)
+left outer join womply_categories wc on (mlc.category_id = wc.id)
+left outer join (select merchant_location_id, count(*) as user_count from roles where name='Merchant Admin' group by merchant_location_id) roles on (roles.merchant_location_id = ccpm.merchant_location_id)
+left outer join products prod on (prod.merchant_location_id = ccpm.merchant_location_id AND prod.type != 'LoyaltyCloudProduct')
+left outer join yelp_businesses yelp on (yelp.id = ccpm.merchant_location_id)"
+
+                deltaQuery="select * from merchant_locations where updated_at > '${dataimporter.last_index_time}'">
+        </entity>
+    </document>
+</dataConfig>
+

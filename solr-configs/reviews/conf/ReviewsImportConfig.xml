@@ -1,0 +1,22 @@
+<dataConfig>
+    <dataSource type="JdbcDataSource" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://host:3306/womply" user="user" password="pass" readOnly="true" batchSize="-1"/>
+    <document>
+        <entity name="review" query="select
+  reviews.id as id,
+  ml.id as merchant_location_id,
+  yelp.id as yelp_business_id,
+  reviews.text,
+  reviews.id as review_id
+from
+  merchant_locations ml,
+  yelp_businesses yelp,
+  yelp_reviews reviews
+where
+  ml.yelp_business_id = yelp.id AND
+  reviews.yelp_business_id = yelp.id"
+
+                deltaQuery="select * from merchant_locations where updated_at > '${dataimporter.last_index_time}'">
+        </entity>
+    </document>
+</dataConfig>
+
